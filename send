@@ -1,0 +1,43 @@
+let Button_B_state = 0
+control.onEvent(EventBusSource.MICROBIT_ID_BUTTON_B, EventBusValue.MICROBIT_BUTTON_EVT_CLICK, () => {
+    if (Button_B_state == 1) {
+        Button_B_state = 0
+    } else {
+        Button_B_state = 1
+    }
+    radio.sendValue("B", Button_B_state)
+})
+basic.forever(() => {
+    if (input.buttonIsPressed(Button.A)) {
+        radio.sendValue("Pitch", 0)
+        radio.sendValue("Roll", 0)
+        radio.sendValue("Move", 0)
+    } else {
+        radio.sendValue("Pitch", input.rotation(Rotation.Pitch))
+        radio.sendValue("Roll", input.rotation(Rotation.Roll))
+        radio.sendValue("Move", input.acceleration(Dimension.Z))
+    }
+})
+input.onGesture(Gesture.Shake, () => {
+    if (Button_B_state == 1) {
+        Button_B_state = 0
+    } else {
+        Button_B_state = 1
+    }
+    radio.sendValue("B", Button_B_state)
+})
+control.onEvent(EventBusSource.MICROBIT_ID_BUTTON_AB, EventBusValue.MICROBIT_BUTTON_EVT_CLICK, () => {
+    if (Button_B_state == 1) {
+        Button_B_state = 0
+    } else {
+        Button_B_state = 1
+    }
+    radio.sendValue("B", Button_B_state)
+})
+input.onButtonPressed(Button.A, () => {
+    radio.sendValue("A", Button_B_state)
+})
+input.onButtonPressed(Button.B, () => {
+    radio.sendValue("B", Button_B_state)
+})
+radio.setGroup(1)
